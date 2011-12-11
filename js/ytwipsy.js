@@ -54,30 +54,31 @@ YUI.add('twipsy', function(Y) {
 	};
 	
 	
-    Y.Twipsy = Y.Base.create("Twipsy", Y.Plugin.Base, [], {
+    Y.Twipsy = Y.Base.create("Twipsy", Y.Plugin.Base, [Y.Plugin.Align], {
 
+		_host: undefined,
         _handles : [],
-
 		_tooltipNode: undefined,
+		_tip: undefined,
 
         //constructor
         initializer : function(config) {
-			var host = this.get("host");
+			this._host = this.get("host");
 			var triggerOn = this.get("triggerOn");
 			var triggerOff = this._determineTriggerOff(triggerOn);
 			
-			if (host.getAttribute("rel") == TWIPSY) {
-				this.set("content", host.getAttribute(DATA_CONTENT));
-				this.set("placement", host.getAttribute(DATA_PLACEMENT));
+			if (this._host.getAttribute("rel") == TWIPSY) {
+				this.set("content", this._host.getAttribute(DATA_CONTENT));
+				this.set("placement", this._host.getAttribute(DATA_PLACEMENT));
 			}
 			
 			this._handles.push(this.on("isEnabledChange", this.handleEnableChange, this));
 			
-            this._handles.push(host.on(triggerOn, function(e) {
+            this._handles.push(this._host.on(triggerOn, function(e) {
                 this.set("isEnabled", true);
             }, this));
 
-			this._handles.push(host.on(triggerOff, function(e) {
+			this._handles.push(this._host.on(triggerOff, function(e) {
                 this.set("isEnabled", false)
             }, this));
         },
@@ -88,12 +89,17 @@ YUI.add('twipsy', function(Y) {
 				v.detach();
 			});
             this._handles = [];
+			this._tooltipNode.unplug(Y.Plugin.Align);
+			this._tip.unplug(Y.Plugin.Align);
+			this._tooltipNode = undefined;
+			this._tip = undefined;
+			this._host = undefined;
         },
 
 		render : function () {
 			var content = this.get("content");
-			var host = this.get("host");
-			var parentNode = host.get("parentNode");
+			//var host = this.get("host");
+			var parentNode = this._host.get("parentNode");
 			var placement = this.get("placement");
 			
 			var tooltipNode = Y.Node.create(
@@ -102,19 +108,24 @@ YUI.add('twipsy', function(Y) {
 				})
 			);
 			
+			//position the tooltipnode at the top left of screen but hide it so it cant be seen. this allows us to
+			//calculate width and height values, and then reposition and fade it in when ready.
 			tooltipNode.setStyles({position: 'absolute', top:0, left:0, display:'block'}).addClass(CLASSES.fade);
 			Y.one(document.body).prepend(tooltipNode);
 			
-			var styles = this._getStylesFromPlacement(tooltipNode, placement);
-			var arrowClass = this._getArrowClass(placement);
-			
+			var arrowClass = this._getArrowType(placement);
 			var tip = Y.Node.create(this.get("_tip"));
-			tip.addClass(arrowClass);
-			tip.setStyles(this._positionTip(tooltipNode, placement));
 			
 			tooltipNode.prepend(tip);
-			tooltipNode.setStyles(styles).addClass(CLASSES.fadeIn);
+			
+			tip.addClass(arrowClass);			
+			tooltipNode = this._alignToolTip(tooltipNode, placement);
+			tip = this._alignTip(tooltipNode, tip, placement);
+			
+			tooltipNode.addClass(CLASSES.fadeIn);
+			tooltipNode.setStyle("margin-bottom", this.get("offset") + 'px');
 			this._tooltipNode = tooltipNode;
+			this._tip = tip;
 			
 			
 		},
@@ -134,69 +145,55 @@ YUI.add('twipsy', function(Y) {
 			}
 		},
 		
-		_getStylesFromPlacement : function (tooltipNode, placement) {
-			var styles = {};
+		_alignToolTip : function (tooltipNode, placement) {
+			tooltipNode.plug(Y.Plugin.Align);
 			var offset = this.get("offset");
-			
-			//Region values refer to values on the host.
-			var region = this.get("host").get("region");
-			
-			//Offset values refer to values on the tooltip
-			var offsetWidth = tooltipNode.get("offsetWidth");
-			var offsetHeight = tooltipNode.get("offsetHeight");
+			//var host = this.get("host");
 						
 			switch (placement) {
 				case "above":
-					styles["top"] = region.top - region.height - 2*offset;
-					styles["left"] = region.left + region.width/2 - offsetWidth/2;
+					tooltipNode.align.to(this._host, "tc", "bc", true);
 					break;
 				case "left":
-					styles["top"] = region.top - offsetHeight/2.5;
-					styles["left"] = region.left - offsetWidth - offset;
+					tooltipNode.align.to(this._host, "lc", "rc", true);
 					break;
 				case "below":
-					styles["top"] = region.top + region.height + offset;
-					styles["left"] = region.left + region.width/2 - offsetWidth/2;
+					tooltipNode.align.to(this._host, "bc", "tc", true);
 					break;
 				case "right":
-					styles["top"] = region.top - offsetHeight/2.5; 
-					styles["left"] = region.left + region.width + offset;
+					tooltipNode.align.to(this._host, "rc", "lc", true);
 					break;
 				default:
 					break;
 			}
-			return styles;
+			
+			return tooltipNode;
 		},
 		
-		_positionTip : function (tooltipNode, placement) {
-			styles = {
-				position: 'relative'
-			};
-			var region = tooltipNode.get("region");
-			var offset = this.get("offset");
+		_alignTip : function (tooltipNode, tip, placement) {
+			tip.plug(Y.Plugin.Align);
+			
 			switch (placement) {
 				case "above":
-					styles['top'] = region.height + 5;
+					tip.align.to(tooltipNode, "bc", "tc", true);
 					break;
 				case "left":
-					styles['left'] = region.width;
-					styles['top'] = tooltipNode.get("offsetHeight")/2
+					tip.align.to(tooltipNode, "rc", "lc", true);
 					break;
 				case "below":
-					styles['top'] = region.top - region.height/4;
+					tip.align.to(tooltipNode, "tc", "bc", true);
 					break;
 				case "right":
-					styles['left'] = region.left - 10;
-					console.log(tooltipNode.getStyle("padding"));
-					styles['top'] = tooltipNode.get("offsetHeight")/2
+					tip.align.to(tooltipNode, "lc", "rc", true);
 					break;
 				default:
 					break;
 			}
-			return styles;
+			
+			return tip;
 		},
 		
-		_getArrowClass : function (placement) {
+		_getArrowType : function (placement) {
 			var arrowClass = '';
 
 			//Remember that the arrow must be pointing in the opposite direction of placement! :)
@@ -274,4 +271,4 @@ YUI.add('twipsy', function(Y) {
 			}
         }
     });
-}, "0.1", { requires : [ "base", "plugin", "node-base", "classnamemanager"] });
+}, "0.1", { requires : ["base", "node", "plugin", "align-plugin", "classnamemanager"] });
