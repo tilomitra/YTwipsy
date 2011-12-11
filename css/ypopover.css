@@ -7,6 +7,7 @@
 	padding: 0px 3px 3px 3px;
 	background: black;
 	min-width:250px;
+	max-width: 300px;
 	
 	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.55);
 	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.55);
@@ -26,6 +27,7 @@
 	-moz-border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
+	overflow-y: auto;
 }
 
 .yui3-popover-header {
