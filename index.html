@@ -4,8 +4,8 @@
 		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css">
 		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssbase/cssbase-min.css">
 		<link rel="stylesheet" type="text/css" href="css/ytwipsy.css">
-		<script src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>
-		<script src="js/ytwipsy.js"></script>
+		<script src="http://yui.yahooapis.com/3.4.1/build/yui/yui-debug.js"></script>
+
 		
 		<style>
 			html {
@@ -82,16 +82,29 @@
 		<p><button id="bottombutton" data-placement="below" rel="twipsy" data-content="*hugs* the button">This is a tooltip positioned below with no offset</button></p>
 		</div>
 	</body>
-	
 	<script>
 		
-		YUI().use("node", "twipsy", function(Y) {
-			Y.one("#someContent1").plug(Y.Twipsy, {offset: 5, triggerOn: 'click'});
-			Y.one("#someContent2").plug(Y.Twipsy, {offset: 10});
-			Y.one("#topbutton").plug(Y.Twipsy, {triggerOn: "click"});
-			Y.one("#bottombutton").plug(Y.Twipsy, {offset:0});    
-			Y.one("#leftbutton").plug(Y.Twipsy);    
-			Y.one("#rightbutton").plug(Y.Twipsy);        
+		YUI({
+			modules:  {
+			    twipsy: {
+			    	fullpath: 'js/ytwipsy.js',
+					requires: ["base", "node", "plugin", "align-plugin", "classnamemanager"]
+			    },
+			    popover: {
+			        fullpath: 'js/ypopover.js',
+			        requires: ['twipsy']
+			    }
+			},
+			
+			filter: 'raw',
+		
+		}).use("popover", function(Y) {
+			// Y.one("#someContent1").plug(Y.Twipsy, {offset: 5, triggerOn: 'click'});
+			// Y.one("#someContent2").plug(Y.Twipsy, {offset: 10});
+			// Y.one("#topbutton").plug(Y.Twipsy, {triggerOn: "click"});
+			// Y.one("#bottombutton").plug(Y.Twipsy, {offset:0});    
+			// Y.one("#leftbutton").plug(Y.Twipsy);    
+			Y.one("#rightbutton").plug(Y.Popover);        
 		});
 	
 	</script>
