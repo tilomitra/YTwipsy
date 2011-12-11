@@ -102,11 +102,7 @@ YUI.add('twipsy', function(Y) {
 			var parentNode = this._host.get("parentNode");
 			var placement = this.get("placement");
 			
-			var tooltipNode = Y.Node.create(
-				Y.Lang.sub(this.get("template"), {
-					content: content
-				})
-			);
+			var tooltipNode = this._createTooltipNode();
 			
 			//position the tooltipnode at the top left of screen but hide it so it cant be seen. this allows us to
 			//calculate width and height values, and then reposition and fade it in when ready.
@@ -143,6 +139,15 @@ YUI.add('twipsy', function(Y) {
 			if (this._tooltipNode) {
 				this._tooltipNode.removeClass(CLASSES.fadeIn);
 			}
+		},
+		
+		_createTooltipNode: function () {
+			var node = Y.Node.create(
+				Y.Lang.sub(this.get("template"), {
+					content: this.get("content")
+				})
+			);
+			return node;
 		},
 		
 		_alignToolTip : function (tooltipNode, placement) {
@@ -250,7 +255,7 @@ YUI.add('twipsy', function(Y) {
 				value: 'above'
 			},
 			offset : {
-				value: 10,
+				value: 0,
 				validator: Y.Lang.isNumber
 			},
 			
