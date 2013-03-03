@@ -1,78 +1,78 @@
 .yui3-twipsy-wrapper {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	line-height: normal;
-	opacity:0.9;
-	z-index:1000;
-	padding: 0 5px 5px 5px;
-	background: black;
-	color: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    line-height: normal;
+    opacity:0.9;
+    z-index:1000;
+    padding: 0 5px 5px 5px;
+    margin: 10px;
+    background: black;
+    color: white;
 }
 
 .yui3-twipsy-inner {
-	width:100%;
-	text-align:center;
-	font-size:12px;
-	
+    width:100%;
+    text-align:center;  
 }
+
+.yui3-twipsy-arrow-up, 
+.yui3-twipsy-arrow-down, 
+.yui3-twipsy-arrow-right,
+.yui3-twipsy-arrow-left {
+    width: 0;
+    height: 0;
+}
+
 .yui3-twipsy-arrow-up {
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-		bottom: 0;
-	    left: 50%;
-	    margin-left: -5px;
-        border-bottom: 5px solid black;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid black;
+    bottom: 0;
+    left: 50%;
+    margin-left: -5px;
 }
 
 .yui3-twipsy-arrow-down {
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-	    left: 50%;
-	    margin-left: -5px;
-	    top: 0;
-        border-top: 5px solid black;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
+    top: 0;
+    left: 50%;
+    margin-left: -5px;
 }
 
 .yui3-twipsy-arrow-right {
-        width: 0;
-        height: 0;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-	 	left: 0;
-	    margin-left: -5px;
-		margin-top:-3px;
-	    top: 50%;
-        border-left: 5px solid black;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid black;
+    top: 50%;
+    left: 0;
+    margin-left: -5px;
+    margin-top:-3px;
 }
 
 .yui3-twipsy-arrow-left {
-        width: 0;
-        height: 0;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent; 
-		margin-right: -5px;
-		margin-top: -3px;
-	    right: 0;
-	    top: 50%;
-        border-right:5px solid black;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent; 
+    border-right:5px solid black;
+    right: 0;
+    top: 50%;
+    margin-right: -5px;
+    margin-top: -3px;
 }
 
 .yui3-twipsy-fade {
-  -webkit-transition: opacity 0.15s linear;
-  -moz-transition: opacity 0.15s linear;
-  -ms-transition: opacity 0.15s linear;
-  -o-transition: opacity 0.15s linear;
-  transition: opacity 0.15s linear;
-  opacity: 0;
+    -webkit-transition: opacity 0.15s linear;
+    -moz-transition: opacity 0.15s linear;
+    -ms-transition: opacity 0.15s linear;
+    -o-transition: opacity 0.15s linear;
+    transition: opacity 0.15s linear;
+    opacity: 0;
 }
 .yui3-twipsy-fade.yui3-twipsy-in {
-  filter: alpha(opacity=90);
-  -khtml-opacity: 0.9;
-  -moz-opacity: 0.9;
-  opacity: 0.9;
+    filter: alpha(opacity=90);
+    -khtml-opacity: 0.9;
+    -moz-opacity: 0.9;
+    opacity: 0.9;
 }
