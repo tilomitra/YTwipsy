@@ -1,126 +1,103 @@
 <!doctype html>
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css">
-		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssbase/cssbase-min.css">
-		<link rel="stylesheet" type="text/css" href="css/ytwipsy.css">
-		<link rel="stylesheet" type="text/css" href="css/ypopover.css">
-		<script src="http://yui.yahooapis.com/3.4.1/build/yui/yui-debug.js"></script>
+    <head>
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.9.0pr3/build/cssnormalize/cssnormalize-min.css">
+        <link rel="stylesheet" type="text/css" href="css/ytwipsy.css">
+        <link rel="stylesheet" type="text/css" href="css/ypopover.css">
+        <script src="http://yui.yahooapis.com/3.9.0pr3/build/yui/yui-min.js"></script>
 
-		
-		<style>
-			html {
-				font-family: "Helvetica Neue Light", "Helvetica", sans-serif;
-				font-size:16px;
-				line-height:22px;
-				color: #333;
-				padding: 15px;
-			}
-			body {
-				padding-left: 35px;
-				margin-left:25px;
-				border-left:1px solid #ccc;
-				width:70%;
-				margin: 0 auto;
-				text-align:justify;
-			}
-			#demoButtons {
-				text-align:center;
-			}
-			a {
-				color: #0069D6;
-				text-decoration:none;
-			}
-			
-			h1 {
-				color: #111;
-				font-size:26px;
-			}
-			
-			h2 {
-				font-size:20px;
-				margin-bottom:5px;
-				color: #666;
-			}
-			
-			strong {
-				background:yellow;
-			}
-		
-		</style>
-	</head>
-	
-	<body>
-		<h1>YTwipsy YUI3 Tooltip and Popover</h1>
-		
-		<h2>What is it?</h2>
-		<p><strong>YTwipsy</strong> is a tooltip for the YUI3 Library. It is built to replicate the functionality of Twipsy, the popular
-			tooltip used in Twitter's Bootstrap. Check out Twipsy <a href="http://twitter.github.com/bootstrap/javascript.html#twipsy" title="Check out Twipsy">here</a>.
-		</p>		
-		<p><strong>Y.Popover</strong> is a node plugin that extends Y.Twipsy, and provides the ability to create popovers for content. <a id="popoverDemo" href='#' rel="twipsy" data-placement="right" data-title="A Popover!" data-content="I can place my content here. There are more demos below. Check em out. This is still very rough, and not all features have been listed.">Here's a popover demo.</a></p>
-		
-		<h3><a href="https://github.com/tilomitra/YTwipsy" title="Fork from Github">Fork from Github here</a></h3>
-		
-		<h2>What features are supported?</h2>
-		<p>Currently Y.Twipsy tooltip supports the following:
-			<ul>
-				<li>Placement of tooltip above, below, left or right of content</li>
-				<li><del>Offset support (how far the tooltip should be from the content</del> <strong>(broken)</strong></li>
-				<li>Ability to set placement and tooltip content through data-attributes on DOM elemnts</li>
-				<li>Customizable triggers (events that should show or hide the tooltip)</li>
-				<li>Animation (no customization yet)</li>
-				<li>The cool "tip" that points to the content</li>
-				<li>Totally skinnable</li>
-			</ul>
-			YTwipsy is built as a Y.Node plugin and it's goal is to be as lightweight as possible.
-		</p>
-		
-		<h2>What about the popover?</h2>
-		
-		<p>Y.Popover extends Y.Twipsy and has the feature set of Y.Twipsy. In addition it currently supports passing in 
-			a title. Additional features are planned. Let me know if you have any ideas on Github.</p>
-		
-		
-		<h2>See it in action</h2>
-		
-		<p>Hover over the links below to see Twipsy in action.</p>
-		
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet mollis turpis non tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Class aptent taciti sociosqu ad <a href="#" id="someContent1" data-placement="above" rel="twipsy" data-content="Lorem Ipsum Dolor Sit Amet?">hover to show tooltip</a> per conubia nostra, per inceptos himenaeos. Nunc posuere eros non orci auctor non faucibus nunc feugiat. Etiam tellus erat, bibendum non rutrum nec, commodo at tellus. Etiam feugiat risus vitae leo tincidunt ac venenatis purus vulputate. Donec at nisl ut nunc euismod varius. <a href="#" id="someContent2" data-placement="right" rel="twipsy" data-content="I'm aligned to the right.">hover</a> id lorem erat. Ut eget nunc nulla. Curabitur mollis, purus eu sodales luctus, metus sem sagittis justo, fringilla malesuada augue nunc sed quam. Curabitur ac magna eu sapien convallis tristique.</p>
-		
-		<div id="demoButtons">
-		<p><button id="topbutton" data-placement="above" rel="twipsy" data-content="YUI rocks.">Click me to activate a tooltip above me with very little content.</button></p>
-		<p><button id="leftbutton" data-placement="left" rel="twipsy" data-content="Ut eget nunc nulla. <br/>Curabitur mollis, purus eu sodales luctus<br/>, metus sem sagittis justo">This is a tooltip positioned to the left with a lot of content</button></p>
-		<p><button id="rightbutton" data-placement="left" rel="twipsy" data-title="Hello, Popover!" data-content="id lorem erat. Ut eget nunc nulla. Curabitur mollis, purus eu sodales luctus, metus sem sagittis justo, fringilla malesuada augue nunc sed quam. Curabitur ac magna eu sapien convallis tristique.">This is a popover positioned to the left</button></p>
-		<p><button id="bottombutton" data-placement="below" rel="twipsy" data-content="*hugs* the button">This is a tooltip positioned below</button></p>
-		</div>
-	</body>
-	<script>
-		
-		YUI({
-			modules:  {
-			    twipsy: {
-			    	fullpath: 'js/ytwipsy.js',
-					requires: ["base", "node", "plugin", "align-plugin", "classnamemanager"]
-			    },
-			    popover: {
-			        fullpath: 'js/ypopover.js',
-			        requires: ['twipsy']
-			    }
-			},
-			
-			filter: 'raw',
-		
-		}).use("popover", "twipsy", function(Y) {
-			Y.one("#someContent1").plug(Y.Twipsy, {offset: 5, triggerOn: 'mouseover'});
-			Y.one("#someContent2").plug(Y.Twipsy, {offset: 10});
-			Y.one("#topbutton").plug(Y.Twipsy, {triggerOn: "click"});
-			Y.one("#bottombutton").plug(Y.Twipsy, {offset:0});    
-			Y.one("#leftbutton").plug(Y.Twipsy);    
-			Y.one("#rightbutton").plug(Y.Popover);
-			Y.one("#popoverDemo").plug(Y.Popover);              
-		});
-	
-	</script>
+        
+        <style>
+            #demoButtons {
+                text-align:center;
+            }
+        
+        </style>
+    </head>
+    
+    <body>
+        <h1>YTwipsy YUI3 Tooltip and Popover</h1>
+        
+        <h2>What is it?</h2>
+        <p><strong>YTwipsy</strong> is a tooltip for the YUI3 Library. It is built to replicate the functionality of Twipsy, the popular
+            tooltip used in Twitter's Bootstrap. Check out Twipsy <a href="http://twitter.github.com/bootstrap/javascript.html#twipsy" title="Check out Twipsy">here</a>.
+        </p>        
+        <p><strong>Y.Popover</strong> is a node plugin that extends Y.Twipsy, and provides the ability to create popovers for content. <a id="popoverDemo" href='#' rel="twipsy" data-placement="below" data-title="A Popover!" data-content="I can place my content here. There are more demos below. Check em out. This is still very rough, and not all features have been listed.">Here's a popover demo.</a></p>
+        
+        <h3><a href="https://github.com/tilomitra/YTwipsy" title="Fork from Github">Fork from Github here</a></h3>
+        
+        <h2>What features are supported?</h2>
+        <p>Currently Y.Twipsy tooltip supports the following:
+            <ul>
+                <li>Placement of tooltip above, below, left or right of content</li>
+                <li><del>Offset support (how far the tooltip should be from the content</del> <strong>(broken)</strong></li>
+                <li>Ability to set placement and tooltip content through data-attributes on DOM elemnts</li>
+                <li>Customizable triggers (events that should show or hide the tooltip)</li>
+                <li>Animation (no customization yet)</li>
+                <li>The cool "tip" that points to the content</li>
+                <li>Totally skinnable</li>
+            </ul>
+            YTwipsy is built as a Y.Node plugin and it's goal is to be as lightweight as possible.
+        </p>
+        
+        <h2>What about the popover?</h2>
+        
+        <p>Y.Popover extends Y.Twipsy and has the feature set of Y.Twipsy. In addition it currently supports passing in 
+            a title. Additional features are planned. Let me know if you have any ideas on Github.</p>
+        
+        
+        <h2>See it in action</h2>
+        
+        <p>Hover over the links below to see Twipsy in action.</p>
+        
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquet mollis turpis non tempus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Class aptent taciti sociosqu ad <a href="#" id="someContent1" data-placement="above" rel="twipsy" data-content="Lorem Ipsum Dolor Sit Amet?">hover to show tooltip</a> per conubia nostra, per inceptos himenaeos. Nunc posuere eros non orci auctor non faucibus nunc feugiat. Etiam tellus erat, bibendum non rutrum nec, commodo at tellus. Etiam feugiat risus vitae leo tincidunt ac venenatis purus vulputate. Donec at nisl ut nunc euismod varius. <a href="#" id="someContent2" data-placement="right" rel="twipsy" data-content="I'm aligned to the right.">hover</a> id lorem erat. Ut eget nunc nulla. Curabitur mollis, purus eu sodales luctus, metus sem sagittis justo, fringilla malesuada augue nunc sed quam. Curabitur ac magna eu sapien convallis tristique.</p>
+        
+        <div id="demoButtons">
+            <p>
+                <button id="topbutton" data-placement="above" rel="twipsy" data-content="YUI rocks.">Click me to activate a tooltip above me with very little content.</button>
+            </p>
+            <p>
+                <button id="leftbutton" data-placement="left" rel="twipsy" data-content="Ut eget nunc nulla. <br/>Curabitur mollis, purus eu sodales luctus<br/>, metus sem sagittis justo">This is a tooltip positioned to the left with a lot of content</button>
+            </p>
+            <p>
+                <button id="rightbutton" data-placement="left" rel="twipsy" data-title="Hello, Popover!" data-content="id lorem erat. Ut eget nunc nulla. Curabitur mollis, purus eu sodales luctus, metus sem sagittis justo, fringilla malesuada augue nunc sed quam. Curabitur ac magna eu sapien convallis tristique.">This is a popover positioned to the left</button>
+            </p>
+            <p>
+                <button id="bottombutton" data-placement="below" rel="twipsy" data-content="*hugs* the button">This is a tooltip positioned below</button>
+            </p>
+        </div>
+    </body>
+    <script>
+        
+        YUI({
+            modules:  {
+                twipsy: {
+                    fullpath: 'js/ytwipsy.js',
+                    requires: ["base", "node", "plugin", "align-plugin", "classnamemanager", "event-outside"]
+                },
+                popover: {
+                    fullpath: 'js/ypopover.js',
+                    requires: ['twipsy']
+                }
+            },
+            
+            filter: 'raw',
+        
+        }).use("popover", "twipsy", function(Y) {
+            Y.one("#someContent1").plug(Y.Twipsy, {offset: 5 });
+            Y.one("#someContent2").plug(Y.Twipsy, {offset: 10});
+            Y.one("#topbutton").plug(Y.Twipsy, { 
+                showOn: { eventName: "click" }, 
+                hideOn: { eventName: "clickoutside" }
+            });
+
+            Y.one("#bottombutton").plug(Y.Twipsy, {offset:0});    
+            Y.one("#leftbutton").plug(Y.Twipsy);    
+            Y.one("#rightbutton").plug(Y.Popover);
+            Y.one("#popoverDemo").plug(Y.Popover);              
+        });
+    
+    </script>
 </html>
 
 
