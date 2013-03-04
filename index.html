@@ -14,9 +14,7 @@
             #demoButtons {
                 text-align: center;
             }
-                #demoButtons button {
-                    width:60%;
-                }
+
             li {
                 margin-bottom:1.2em;
             }
@@ -120,8 +118,8 @@
                 Y.one("#someContent1").plug(Y.Twipsy, {offset: 5 });
                 Y.one("#someContent2").plug(Y.Twipsy, {offset: 10});
                 Y.one("#topbutton").plug(Y.Twipsy, { 
-                    showOn: { eventName: "click" }, 
-                    hideOn: { eventName: "clickoutside" }
+                    showOn: { events: "click" }, 
+                    hideOn: { events: "clickoutside" }
                 });
 
                 Y.one("#bottombutton").plug(Y.Twipsy, {offset:0});    

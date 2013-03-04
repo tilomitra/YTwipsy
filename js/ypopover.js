@@ -69,7 +69,7 @@ YUI.add('popover', function(Y) {
             valueFn: function () {
                 return {
                     node: undefined,
-                    eventName: "clickoutside"
+                    events: "clickoutside"
                 }
             }
         },
@@ -78,7 +78,7 @@ YUI.add('popover', function(Y) {
             valueFn: function () {
                 return {
                     node: undefined,
-                    eventName: "click"
+                    events: "click"
                 }
             }
         }
