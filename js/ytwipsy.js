@@ -65,6 +65,10 @@ YUI.add('twipsy', function(Y) {
         initializer : function(config) {
             var showOn = this.get("showOn"),
                 hideOn = this.get("hideOn"),
+                showOnEvents = showOn.events.split(" "),
+                hideOnEvents = hideOn.events.split(" "),
+                i,
+                node,
                 setEnabledTrueFn = function (e) {
                     e.preventDefault();
                     this.set("isEnabled", true);
@@ -73,6 +77,7 @@ YUI.add('twipsy', function(Y) {
                     e.preventDefault();
                     this.set("isEnabled", false);
                 };
+
 
             this._host = this.get("host");
 
@@ -85,33 +90,16 @@ YUI.add('twipsy', function(Y) {
             //Set actions to be taken on enabledChange
             this._handles.push(this.on("isEnabledChange", this.handleEnableChange, this));
             
-            
             //Determine show triggers based on showOn object
-            if (!showOn.node && showOn.eventName) {
-                this._handles.push(this._host.on(showOn.eventName, setEnabledTrueFn, this));
+            for (i = 0; i < showOnEvents.length; i++) {
+                node = (showOn.node) ? showOn.node : this._host;
+                this._handles.push(node.on(showOnEvents[i], setEnabledTrueFn, this));
             }
 
-            //node defined, no keycode (not a keypress)
-            else if (showOn.node && showOn.eventName) {
-                this._handles.push(showOn.node.on(showOn.eventName, setEnabledTrueFn, this));
-            }
-
-            else {
-                Y.log('The event with name "' + showOn.eventName + '" could not be attached.');
-            }
-            
             //Determine hide triggers based on hideOn object
-            if (!hideOn.node && hideOn.eventName) {
-                this._handles.push(this._host.on(hideOn.eventName, setEnabledFalseFn, this));
-            }
-
-            //node defined, no keycode (not a keypress)
-            else if (hideOn.node && hideOn.eventName) {
-                this._handles.push(hideOn.node.on(hideOn.eventName, setEnabledFalseFn, this));
-            }
-
-            else {
-                Y.log('The event with name "' + hideOn.eventName + '" could not be attached.');
+            for (i = 0; i < hideOnEvents.length; i++) {
+                node = (hideOn.node) ? hideOn.node : this._host;
+                this._handles.push(node.on(hideOnEvents[i], setEnabledFalseFn, this));
             }
         },
 
@@ -178,7 +166,6 @@ YUI.add('twipsy', function(Y) {
         },
         
         _alignToolTip : function (tooltipNode, placement) {
-            var offset = this.get("offset");
             tooltipNode.plug(Y.Plugin.Align);
                         
             switch (placement) {
@@ -218,6 +205,7 @@ YUI.add('twipsy', function(Y) {
                     tip.align.to(tooltipNode, "lc", "rc", true);
                     break;
                 default:
+                    Y.log("A correct alignment was not specified. Accepted alignments are 'above', 'below', 'left' and 'right'.");
                     break;
             }
             
@@ -242,6 +230,7 @@ YUI.add('twipsy', function(Y) {
                     arrowClass = CLASSES.leftArrow;
                     break;
                 default:
+                    Y.log("A correct placement parameter was not specified. Accepted placements are 'above', 'below', 'left' and 'right'.");
                     break;
             }
             
@@ -269,7 +258,7 @@ YUI.add('twipsy', function(Y) {
                 valueFn: function () {
                     return {
                         node: undefined,
-                        eventName: "mouseout"
+                        events: "mouseout blur"
                     }
                 }
             },
@@ -278,17 +267,13 @@ YUI.add('twipsy', function(Y) {
                 valueFn: function () {
                     return {
                         node: undefined,
-                        eventName: "mouseover"
+                        events: "mouseover focus"
                     }
                 }
             },
             
             placement : {
                 value: 'above'
-            },
-            offset : {
-                value: 10,
-                validator: Y.Lang.isNumber
             },
             
             isEnabled : {
