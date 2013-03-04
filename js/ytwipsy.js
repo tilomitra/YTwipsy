@@ -66,9 +66,11 @@ YUI.add('twipsy', function(Y) {
             var showOn = this.get("showOn"),
                 hideOn = this.get("hideOn"),
                 setEnabledTrueFn = function (e) {
+                    e.preventDefault();
                     this.set("isEnabled", true);
                 },
                 setEnabledFalseFn = function (e) {
+                    e.preventDefault();
                     this.set("isEnabled", false);
                 };
 
@@ -132,14 +134,15 @@ YUI.add('twipsy', function(Y) {
                 placement = this.get("placement"),
                 tooltipNode = this._createTooltipNode(),
                 arrowClass = this._getArrowType(placement),
-                tip = Y.Node.create(this.get("tip"));
+                tip = Y.Node.create(this.get("tip")),
+                parentContainer = this.get("parentContainer");
             
             //position the tooltipnode at the top left of screen but hide it so it cant be seen. this allows us to
             //calculate width and height values, and then reposition and fade it in when ready.
             tooltipNode.setStyles({position: 'absolute', top:0, left:0, display:'block'}).addClass(CLASSES.fade);
         
             tooltipNode.prepend(tip);
-            Y.one(document.body).prepend(tooltipNode);
+            Y.one(parentContainer).prepend(tooltipNode);
 
             tip.addClass(arrowClass);           
             tooltipNode = this._alignToolTip(tooltipNode, placement);
@@ -302,6 +305,10 @@ YUI.add('twipsy', function(Y) {
             tip: {
                 value: TEMPLATES.tip,
                 validator: Y.Lang.isString
+            },
+
+            parentContainer: {
+                value: 'body'
             }
         }
     });
