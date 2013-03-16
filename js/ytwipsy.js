@@ -81,7 +81,7 @@ YUI.add('twipsy', function(Y) {
 
             this._host = this.get("host");
 
-            //Get ATTRS from the host node
+            //Get attributes from the host node and over-write the ATTRS if necessary
             if (this._host.getAttribute("rel") == TWIPSY) {
                 this.set("content", this._host.getAttribute(DATA_CONTENT));
                 this.set("placement", this._host.getAttribute(DATA_PLACEMENT));
@@ -117,8 +117,7 @@ YUI.add('twipsy', function(Y) {
         },
 
         render : function () {
-            var content = this.get("content"),
-                parentNode = this._host.get("parentNode"),
+            var parentNode = this._host.get("parentNode"),
                 placement = this.get("placement"),
                 tooltipNode = this._createTooltipNode(),
                 arrowClass = this._getArrowType(placement),
@@ -159,7 +158,7 @@ YUI.add('twipsy', function(Y) {
         _createTooltipNode: function () {
             var node = Y.Node.create(
                 Y.Lang.sub(this.get("template"), {
-                    content: this.get("content")
+                    content: this.get('content')
                 })
             );
             return node;
@@ -239,9 +238,11 @@ YUI.add('twipsy', function(Y) {
         
         handleEnableChange : function (e) {
             if (e.newVal) {
+                Y.log("Showing");
                 this.show();
             }
             else {
+                Y.log("Hiding");
                 this.hide();
             }
         }
