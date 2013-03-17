@@ -22,57 +22,41 @@ YUI.add('widget-pointer', function(Y, NAME) {
             right: getCN(WIDGET, RIGHTARROW)
         },
 
-        POINTER_TEMPLATE = '<div class="' + CLASSES.pointer + '"></div>'
+        POINTER_TEMPLATE = '<div class="' + CLASSES.pointer + '"></div>',
 
         //HTML5 Data Attributes
-        DATA_CONTENT = 'data-content',
-        DATA_point = 'data-point';
+        DATA_POINT = 'data-point';
 
     function Pointer() {
 
         //  Widget method overlap
         Y.after(this._renderUIPointer, this, "renderUI");
         Y.after(this._bindUIPointer, this, "bindUI");
-        Y.after(this._syncUIPointer, this, "syncUI");
-
     }
 
     Pointer.ATTRS = {
         point : {
             value: 'above'
-        },
-        
-        pointerTemplate: {
-            value: POINTER_TEMPLATE,
-            validator: Y.Lang.isString
-        },
-
-
-
+        }
     };
 
     Pointer.prototype = {
 
+        destructor: function () {
+            this._pointer.unplug(Y.Plugin.Align);
+        },
+
         _renderUIPointer: function () {
             var box = this.get('boundingBox');
-            this._pointer = Y.Node.create(this.get('pointerTemplate'));
-            this._pointer.addClass(this._getArrowType(this.get('point')));
-
+            this._pointer = Y.Node.create(POINTER_TEMPLATE);
             box.prepend(this._pointer);
+            this._pointer.plug(Y.Plugin.Align);
         },
 
         _bindUIPointer: function () {
             this.after('pointChange', this._afterPointChange);
         },
 
-        _syncUIPointer: function () {
-            var box = this.get('boundingBox'),
-                point = this.get('point'),
-                arrowClass = this._getArrowType(point);
-        
-            this._alignPointer(box, this._pointer, point);
-
-        },
 
         _getArrowType : function (point) {
             var arrowClass = '';
@@ -80,16 +64,16 @@ YUI.add('widget-pointer', function(Y, NAME) {
             //Remember that the arrow must be pointing in the opposite direction of point! :)
             switch (point) {
                 case "below":
-                    arrowClass = CLASSES.below;
-                    break;
-                case "right":
-                    arrowClass = CLASSES.right;
-                    break;
-                case "above":
                     arrowClass = CLASSES.above;
                     break;
-                case "left":
+                case "right":
                     arrowClass = CLASSES.left;
+                    break;
+                case "above":
+                    arrowClass = CLASSES.below;
+                    break;
+                case "left":
+                    arrowClass = CLASSES.right;
                     break;
                 default:
                     Y.log("A correct point parameter was not specified. Accepted points are 'above', 'below', 'left' and 'right'.");
@@ -99,40 +83,38 @@ YUI.add('widget-pointer', function(Y, NAME) {
             return arrowClass;
         },
 
-        _alignPointer : function (node, pointer, point) {
-            pointer.plug(Y.Plugin.Align);
+        alignPointer : function (node) {
             
+            var point = node.getAttribute(DATA_POINT) || this.get('point'),
+                box = this.get('boundingBox'),
+                arrowClass = this._getArrowType(point);
+
+            this._pointer.set('className', '').addClass(CLASSES.pointer + " " + arrowClass);
+
             switch (point) {
                 case "below":
-                    pointer.align.to(node, "bc", "tc", true);
+                    this._pointer.align.to(box, "tc", "bc", true);
                     break;
                 case "right":
-                    pointer.align.to(node, "rc", "lc", true);
+                    this._pointer.align.to(box, "lc", "rc", true);
                     break;
                 case "above":
-                    pointer.align.to(node, "tc", "bc", true);
+                    this._pointer.align.to(box, "bc", "tc", true);
                     break;
                 case "left":
-                    pointer.align.to(node, "lc", "rc", true);
+                    this._pointer.align.to(box, "rc", "lc", true);
                     break;
                 default:
                     Y.log("A correct alignment was not specified. Accepted alignments are 'above', 'below', 'left' and 'right'.");
                     break;
-            }
-            
-            return pointer;
+            }            
         },
 
-        _afterPointChange: function (e) {
-            var className = this._getArrowType(e.newVal),
-                prevClassName = CLASSES[e.prevVal] || '',
-                box = this.get('boundingBox');
 
-            if (prevClassName.length >= 1) {
-                this._pointer.removeClass(prevClassName);
-            }
-            this._pointer.addClass(className);
-            this._alignPointer(box, this._pointer, e.newVal);
+        _afterPointChange: function (e) {
+            var arrowClass = this._getArrowType(e.newVal);
+            this._pointer.set('className', '').addClass(CLASSES.pointer + " " + arrowClass);
+            this.alignPointer();
         }
         
     };

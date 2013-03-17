@@ -15,51 +15,24 @@ YUI.add('twipsy', function(Y) {
     
     var getCN = Y.ClassNameManager.getClassName,
     
-
-    
     //HTML5 Data Attributes
     DATA_CONTENT = 'data-content',
-    DATA_PLACEMENT = 'data-placement',
-    
+    DATA_POINT = 'data-point',
     
     //Classes
     TWIPSY = 'twipsy',
-    WRAPPER = 'wrapper',
-    INNER = 'inner',
-    TIP = 'tip',
     FADE = 'fade',
     IN = 'in',
-    UPARROW = "arrow-up",
-    DOWNARROW = "arrow-down",
-    LEFTARROW = "arrow-left",
-    RIGHTARROW = "arrow-right",
     
     CLASSES = {
-        tooltip: getCN(TWIPSY, WRAPPER),
-        inner: getCN(TWIPSY, INNER),
-        tip: getCN(TWIPSY, TIP),
         fade: getCN(TWIPSY, FADE),
-        fadeIn: getCN(TWIPSY, IN),
-        upArrow: getCN(TWIPSY, UPARROW),
-        downArrow: getCN(TWIPSY, DOWNARROW),
-        leftArrow: getCN(TWIPSY, LEFTARROW),
-        rightArrow: getCN(TWIPSY, RIGHTARROW)
-    },
-    
-    
-    //markup templates
-    TEMPLATES = {
-        wrapper : '<div class="' + CLASSES.tooltip + '"><div class="' + CLASSES.inner + '">{content}</div></div>',
-        tip     : '<div class="' + CLASSES.tip + '"></div>'
+        fadeIn: getCN(TWIPSY, IN)
     };
     
     
-    Y.Twipsy = Y.Base.create("Twipsy", Y.Plugin.Base, [Y.Plugin.Align], {
+    Y.Twipsy = Y.Base.create("twipsy", Y.Widget, [Y.WidgetPointer, Y.WidgetPosition, Y.WidgetPositionAlign], {
 
-        _host       : undefined,
         _handles    : [],
-        _tooltipNode: undefined,
-        _tip        : undefined,
 
         //constructor
         initializer : function(config) {
@@ -69,38 +42,20 @@ YUI.add('twipsy', function(Y) {
                 hideOnEvents = hideOn.events.split(" "),
                 i,
                 node,
-                setEnabledTrueFn = function (e) {
-                    e.preventDefault();
-                    this.set("isEnabled", true);
-                },
-                setEnabledFalseFn = function (e) {
-                    e.preventDefault();
-                    this.set("isEnabled", false);
+                currentNode = {
+                    node: undefined,
+                    content: undefined
                 };
 
+            // this._host = this.get("host");
 
-            this._host = this.get("host");
-
-            //Get attributes from the host node and over-write the ATTRS if necessary
-            if (this._host.getAttribute("rel") == TWIPSY) {
-                this.set("content", this._host.getAttribute(DATA_CONTENT));
-                this.set("placement", this._host.getAttribute(DATA_PLACEMENT));
-            }
+            // //Get attributes from the host node and over-write the ATTRS if necessary
+            // if (this._host.getAttribute("rel") == TWIPSY) {
+            //     this.set("content", this._host.getAttribute(DATA_CONTENT));
+            //     this.set("placement", this._host.getAttribute(DATA_PLACEMENT));
+            // }
             
-            //Set actions to be taken on enabledChange
-            this._handles.push(this.on("isEnabledChange", this.handleEnableChange, this));
-            
-            //Determine show triggers based on showOn object
-            for (i = 0; i < showOnEvents.length; i++) {
-                node = (showOn.node) ? showOn.node : this._host;
-                this._handles.push(node.on(showOnEvents[i], setEnabledTrueFn, this));
-            }
 
-            //Determine hide triggers based on hideOn object
-            for (i = 0; i < hideOnEvents.length; i++) {
-                node = (hideOn.node) ? hideOn.node : this._host;
-                this._handles.push(node.on(hideOnEvents[i], setEnabledFalseFn, this));
-            }
         },
 
         //clean up on destruction
@@ -108,151 +63,120 @@ YUI.add('twipsy', function(Y) {
             Y.each(this._handles, function(v, k, o) {
                 v.detach();
             });
-            this._handles = [];
-            this._tooltipNode.unplug(Y.Plugin.Align);
-            this._tip.unplug(Y.Plugin.Align);
-            this._tooltipNode = undefined;
-            this._tip = undefined;
-            this._host = undefined;
         },
 
-        render : function () {
-            var parentNode = this._host.get("parentNode"),
-                placement = this.get("placement"),
-                tooltipNode = this._createTooltipNode(),
-                arrowClass = this._getArrowType(placement),
-                tip = Y.Node.create(this.get("tip")),
-                parentContainer = this.get("parentContainer");
-            
-            //position the tooltipnode at the top left of screen but hide it so it cant be seen. this allows us to
-            //calculate width and height values, and then reposition and fade it in when ready.
-            tooltipNode.setStyles({position: 'absolute', top:0, left:0, display:'block'}).addClass(CLASSES.fade);
-        
-            tooltipNode.prepend(tip);
-            Y.one(parentContainer).prepend(tooltipNode);
+        renderUI : function () {
+            this.get('boundingBox').addClass(CLASSES.fade);
+        },
 
-            tip.addClass(arrowClass);           
-            tooltipNode = this._alignToolTip(tooltipNode, placement);
-            tip = this._alignTip(tooltipNode, tip, placement);
+        bindUI : function () {
+            var i,
+                setEnabledTrueFn = function (e) {
+                    e.preventDefault();
+                    this.set("isEnabled", true);
+                },
+                setEnabledFalseFn = function (e) {
+                    e.preventDefault();
+                    this.set("isEnabled", false);
+                },
+                del = this.get('delegate'),
+                box = this.get('boundingBox'),
+                selector = this.get('selector');
+
+
+            //Set actions to be taken on enabledChange
+            //this._handles.push(this.on("isEnabledChange", this.handleEnableChange, this));
             
-            tooltipNode.addClass(CLASSES.fadeIn);
-            this._tooltipNode = tooltipNode;
-            this._tip = tip;            
+
+
+            // //Determine show triggers based on showOn object
+            // for (i = 0; i < showOnEvents.length; i++) {
+            //     node = (showOn.node) ? showOn.node : box;
+            //     this._handles.push(node.on(showOnEvents[i], setEnabledTrueFn, this));
+            // }
+
+            // //Determine hide triggers based on hideOn object
+            // for (i = 0; i < hideOnEvents.length; i++) {
+            //     node = (hideOn.node) ? hideOn.node : box;
+            //     this._handles.push(node.on(hideOnEvents[i], setEnabledFalseFn, this));
+            // }
+
+            this._handles.push(del.delegate(['mouseover', 'touchstart'], this._handleDelegateStart, selector, this));
+            
+            
+
+        },
+
+        syncUI : function () {
+        },
+
+        _handleDelegateStart : function (e) {
+            var del = this.get('delegate'),
+                selector = this.get('selector');
+
+            this._handles.push(del.delegate(['mouseout', 'touchend'], this._handleDelegateEnd, selector, this));
+
+            var node = e.currentTarget;
+            this.showTooltip(node);
+        },
+
+        _handleDelegateEnd: function (e) {
+            var node = e.currentTarget;
+            this.hideTooltip(node);
+        },
+
+        showTooltip : function (node) {
+            this._setTooltipContent(node);
+            this._alignTooltip(node);
+            this.alignPointer(node);
+            this.get('boundingBox').addClass(CLASSES.fadeIn);
         },
         
-        show : function () {
-            if (this._tooltipNode) {
-                this._tooltipNode.addClass(CLASSES.fadeIn);
-            }
-            else {
-                this.render();
-            }
+        hideTooltip : function (node) {
+            this.get('boundingBox').removeClass(CLASSES.fadeIn);
         },
         
-        hide : function () {
-            if (this._tooltipNode) {
-                this._tooltipNode.removeClass(CLASSES.fadeIn);
-            }
+        _setTooltipContent: function (node) {
+            var content = node.getAttribute(DATA_CONTENT) || this.get('content'),
+                contentBox = this.get('contentBox');
+
+            contentBox.setContent(content);
         },
         
-        _createTooltipNode: function () {
-            var node = Y.Node.create(
-                Y.Lang.sub(this.get("template"), {
-                    content: this.get('content')
-                })
-            );
-            return node;
-        },
-        
-        _alignToolTip : function (tooltipNode, placement) {
-            tooltipNode.plug(Y.Plugin.Align);
-                        
-            switch (placement) {
+        _alignTooltip : function (node) {
+            var point = node.getAttribute(DATA_POINT) || this.get('point');
+
+            switch (point) {
                 case "above":
-                    tooltipNode.align.to(this._host, "tc", "bc", true);
+                    this.align(node, ["bc", "tc"]);
                     break;
                 case "left":
-                    tooltipNode.align.to(this._host, "lc", "rc", true);
+                    this.align(node, ["rc", "lc"]);
                     break;
                 case "below":
-                    tooltipNode.align.to(this._host, "bc", "tc", true);
+                    this.align(node, ["tc", "bc"]);
                     break;
                 case "right":
-                    tooltipNode.align.to(this._host, "rc", "lc", true);
+                    this.align(node, ["lc", "rc"]);
                     break;
                 default:
                     break;
-            }
-            
-            return tooltipNode;
-        },
-        
-        _alignTip : function (tooltipNode, tip, placement) {
-            tip.plug(Y.Plugin.Align);
-            
-            switch (placement) {
-                case "above":
-                    tip.align.to(tooltipNode, "bc", "tc", true);
-                    break;
-                case "left":
-                    tip.align.to(tooltipNode, "rc", "lc", true);
-                    break;
-                case "below":
-                    tip.align.to(tooltipNode, "tc", "bc", true);
-                    break;
-                case "right":
-                    tip.align.to(tooltipNode, "lc", "rc", true);
-                    break;
-                default:
-                    Y.log("A correct alignment was not specified. Accepted alignments are 'above', 'below', 'left' and 'right'.");
-                    break;
-            }
-            
-            return tip;
-        },
-        
-        _getArrowType : function (placement) {
-            var arrowClass = '';
-
-            //Remember that the arrow must be pointing in the opposite direction of placement! :)
-            switch (placement) {
-                case "above":
-                    arrowClass = CLASSES.downArrow;
-                    break;
-                case "left":
-                    arrowClass = CLASSES.rightArrow;
-                    break;
-                case "below":
-                    arrowClass = CLASSES.upArrow;
-                    break;
-                case "right":
-                    arrowClass = CLASSES.leftArrow;
-                    break;
-                default:
-                    Y.log("A correct placement parameter was not specified. Accepted placements are 'above', 'below', 'left' and 'right'.");
-                    break;
-            }
-            
-            return arrowClass;
-        },
-        
-        handleEnableChange : function (e) {
-            if (e.newVal) {
-                Y.log("Showing");
-                this.show();
-            }
-            else {
-                Y.log("Hiding");
-                this.hide();
-            }
+            }            
         }
     },
     {
         NS : "twipsy",
+        OFFSET_X: -9999,
+        OFFSET_Y: -9999,
+
         ATTRS : {
             content : { 
                 value : '',
                 validator: Y.Lang.isString 
+            },
+
+            selector: {
+                value: null
             },
             
             hideOn : {              
@@ -260,7 +184,7 @@ YUI.add('twipsy', function(Y) {
                     return {
                         node: undefined,
                         events: "mouseout blur"
-                    }
+                    };
                 }
             },
             
@@ -269,33 +193,17 @@ YUI.add('twipsy', function(Y) {
                     return {
                         node: undefined,
                         events: "mouseover focus"
-                    }
+                    };
                 }
             },
             
-            placement : {
-                value: 'above'
-            },
-            
-            isEnabled : {
-                value: false,
-                validator: Y.Lang.isBoolean,
-                lazyAdd: false
-            },
-            
-            template : {
-                value: TEMPLATES.wrapper,
-                validator: Y.Lang.isString
-            },
-            
-            tip: {
-                value: TEMPLATES.tip,
-                validator: Y.Lang.isString
-            },
-
-            parentContainer: {
-                value: 'body'
+            delegate: {
+                value: null,
+                setter: function(val) {
+                    return Y.one(val) || Y.one("document");
+                }
             }
         }
     });
-}, "0.1", { requires : ["base", "node-base", "pluginhost-base", "align-plugin", "classnamemanager"] });
+}, "0.1", { requires : ["widget", "widget-position-align", "widget-pointer", "widget-stack", "classnamemanager"] 
+});
