@@ -1,4 +1,2 @@
-YTwipsy YUI3 Tooltip
-====================
-
-Check http://sandbox.tilomitra.com/YTwipsy/ for up-to-date demos and READMEs. 
+This module is no longer being developed. Check out [Y.Tipsy](http://github.com/tilomitra/tipsy) instead.
+========================================
